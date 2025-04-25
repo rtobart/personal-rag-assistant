@@ -1,4 +1,4 @@
-# 🧠 Taller: Crea tu propio Asistente Personal con IA Generativa (RAG + Notion + Obsidian)
+# 🧠 Crea tu propio Asistente Personal con IA Generativa (RAG + Notion + Obsidian)
 
 **Duración:** 3 horas  
 **Nivel:** Intermedio (nociones básicas de programación)  
