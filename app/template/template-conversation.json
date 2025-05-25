@@ -1,0 +1,5 @@
+{
+    "instruction": "{system_instructions}",
+    "retrieved_context": [],
+    "user_query": "{user_query}"
+}
