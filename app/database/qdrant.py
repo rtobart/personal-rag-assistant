@@ -118,26 +118,43 @@ class Qdrant(VectorDatabaseInterface):
 
     async def insert_data(self, collection_name: str, files: FileBatch):
         try:
+            # Verificar si la colección existe, si no existe crearla
+            if not self.check_if_collection_exists(collection_name):
+                self.logger.info(f"La colección '{collection_name}' no existe. Creando colección...")
+                
+                # Crear una configuración básica para la colección
+                # Asumiendo que los embeddings tienen una dimensión estándar (puedes ajustar según tus necesidades)
+                vector_size = len(files.file_chunks[0].embedding) if files.file_chunks and files.file_chunks[0].embedding else 1536
+                
+                self.client.recreate_collection(
+                    collection_name=collection_name,
+                    vectors_config=VectorParams(
+                        size=vector_size,
+                        distance=Distance.COSINE
+                    )
+                )
+                self.logger.info(f"Colección '{collection_name}' creada exitosamente.")
+            
             point_structs = []
             for index, file_chunk in enumerate(files.file_chunks):
                 # Agregamos el contenido a los metadatos
                 file_chunk.metadata['content'] = file_chunk.content
-
+    
                 # sacamos valores del chunk
                 embedding = None
                 metadata = None
                 embedding = file_chunk.embedding
                 metadata = file_chunk.metadata
-
+    
                 points=PointStruct(id=index, vector=embedding, payload=metadata)
                 point_structs.append(points)
-
+    
             self.client.upsert(
                 collection_name=collection_name,
                 points=point_structs
             )
             self.logger.info(f"Proceso de inserción de datos en {collection_name} completado.")
-
+    
         except Exception as e:
             print("error insert_data:", str(e))
             self.logger.error(str(e))
@@ -162,7 +179,6 @@ class Qdrant(VectorDatabaseInterface):
         return self.vector_database.list_collections()
 
     def search_text(self, search: Search) -> list[str]:
-        print('search: ', search)
         if search.filter_property is None or search.filter_property == "":
             return self.search_text_no_filter(search)
         else:

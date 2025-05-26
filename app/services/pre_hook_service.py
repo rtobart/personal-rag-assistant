@@ -14,8 +14,6 @@ from app.services.query_processing import process_query
 class PreHookService:
 
     def __init__(self):
-        self.data_processing_base_url = ConfigInstance.get(VARS.DATAPROCESSING_BASE_URL)
-        self.vector_db_base_url = ConfigInstance.get(VARS.VECTOR_DB_BASE_URL)
         self.headers = {
             "accept": "application/json",
             "Content-Type": "application/json",
@@ -23,10 +21,10 @@ class PreHookService:
 
     async def get_retrieved_embedding(self, query, embedding_algorithm):
         try:
-            body = {"query": query, "embedding": embedding_algorithm}
+            body = {"query": [query], "embedding": embedding_algorithm}
             LoggerInstance.info(f"Inicio embeddings {datetime.now()} ")
             res = await process_query(body)
-            return res["embedding"]
+            return res[0]["embedding"]
         except Exception as e:
             LoggerInstance.error(str(e))
             raise ProxyEmbeddingException()
@@ -43,7 +41,7 @@ class PreHookService:
                 filter_property=metadata["filter_property"],
                 filter_value=metadata["filter_value"],
             )
-            LoggerInstance.info(f"Metadata: {metadata}")
+            LoggerInstance.debug(f"Metadata: {metadata}")
             vectors = VectorDBServiceInstanceQdrant.search_text(search_object)
         except Exception as e:
             LoggerInstance.error(f"Error inesperado: {str(e)}")
@@ -53,9 +51,9 @@ class PreHookService:
             LoggerInstance.info("No se encontraron vectores.")
             return None
         LoggerInstance.info(f"Fin vector {datetime.now()} ")
-        context = "\n".join(
-            [f"{vector['text']}" for vector in vectors if "text" in vector]
-        )
+        context = [
+            vector.payload["content"] for vector in vectors if "content" in vector.payload
+        ]
         if not context:
             LoggerInstance.info("No se encontraron textos en los vectores.")
             return None
@@ -87,7 +85,7 @@ class PreHookService:
             "search_embedding": retrieved_embedding,
             "filter_property": "",
             "filter_value": "",
-            "collection_name": "midjourney"
+            "collection_name": "notion"
         }
         context = await self.get_retrived_vectors(metadata)
         return context

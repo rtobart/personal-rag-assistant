@@ -1,4 +1,5 @@
 import logging
+import os
 from sys import stdout
 
 
@@ -33,5 +34,5 @@ class Logger(logging.Logger):
     def critical(self, message: str):
         super().critical(f"[CRITICAL] - {message}")
 
-
-LoggerInstance = Logger("INFO")
+LOGGING_LEVEL = os.getenv("LOGGING_LEVEL").upper()
+LoggerInstance = Logger(LOGGING_LEVEL)

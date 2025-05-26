@@ -15,3 +15,5 @@ vertexai>=1.71.1
 google-cloud-aiplatform==1.71.1
 llama_index
 qdrant_client
+notion_client
+openai

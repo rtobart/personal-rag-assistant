@@ -11,7 +11,7 @@ logger = LoggerInstance
 
 async def prepare_event(
     document: Document, embedding_process: EmbeddingProcess
-) -> dict:
+) -> FileChunk:
     """
     Prepare serialized JSON to publish to EventHub.
 

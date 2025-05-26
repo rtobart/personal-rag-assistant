@@ -17,9 +17,9 @@ class ContexChatbotService:
         en la entrada del usuario y el contexto recuperado."""
         try:
             prompt_json = self.template_manager.get_config()
-            prompt_json["retrieved_context"].extend(neighbors)
-            prompt_json["user_query"] = input.text
-            prompt_json["instruction"] = agent_description
+            prompt_json["contexto_recuperado"].extend(neighbors)
+            prompt_json["consulta_del_usuario"] = input.text
+            prompt_json["instrucciones"] = agent_description
             return prompt_json
         except Exception as e:
             LoggerInstance.error(f"Error creating query: {e}")

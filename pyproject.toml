@@ -22,4 +22,6 @@ dependencies = [
     "vertexai>=1.71.1",
     "llama-index",
     "qdrant-client>=1.14.2",
+    "notion-client>=2.3.0",
+    "openai>=1.82.0",
 ]

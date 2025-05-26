@@ -32,6 +32,9 @@ class VectorDBServiceQdrant:
     
     async def delete_data_collection(self, collection: CollectionDto):
         return await self.vector_database.delete_data_collection(collection)
+    
+    async def insert_data(self, collection_name: str, files: FileBatch):
+        return await self.vector_database.insert_data(collection_name, files)
 
 # Singleton and dependency injection
 VectorDBServiceInstanceQdrant = VectorDBServiceQdrant(vector_database=QdrantInstance)

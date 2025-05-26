@@ -1,6 +1,9 @@
 from app.constants.agentModel import VERTEX_AI_MODEL
+from app.facade.ollama_facade import OllamaClient
+from app.facade.openrouter_facade import OpenRouterFacade
 from app.logger.logger import LoggerInstance
 from app.facade.vertex_facade import VertexFacade
+from app.facade.open_ai_facade import OpenAIFacade
 
 
 class AIFactory:
@@ -28,6 +31,15 @@ class AIFactory:
         if provider == VERTEX_AI_MODEL:
             LoggerInstance.info(f"Setting LLM service: {provider}")
             return VertexFacade()
+        if provider == "openai":
+            LoggerInstance.info(f"Setting LLM service: {provider}")
+            return OpenAIFacade()
+        if provider == "openrouter":
+            LoggerInstance.info(f"Setting LLM service: {provider}")
+            return OpenRouterFacade()
+        if provider == "ollama":
+            LoggerInstance.info(f"Setting LLM service: {provider}")
+            return OllamaClient()
 
 
 async def get_ai_facade_factory():

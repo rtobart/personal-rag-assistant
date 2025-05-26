@@ -14,8 +14,8 @@ class AgentChatServices:
         pre_hook_service: PreHookService,
         contex_chatbot_service: ContexChatbotService,
     ):
+        self.facade = None
         self.factory = factory
-        self.facade = self.factory.create_ia("VERTEX")
         self.pre_hook_service = pre_hook_service
         self.history = [str]
         self.contex_chatbot_service = contex_chatbot_service
@@ -41,5 +41,9 @@ class AgentChatServices:
         neighbors = await self.pre_inference(modal_input)
         prompt_json = await self.contex_chatbot_service.create_query(
             modal_input, agent_description, neighbors)
+        print('prompt_json: ', prompt_json)
+        self.facade = self.factory.create_ia(modal_input.modelProvider)
+        if not self.facade:
+            raise ValueError("Invalid model provider specified.")
         system_response_llm = await self.facade.run_prompt(prompt_json)
         return system_response_llm

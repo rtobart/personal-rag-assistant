@@ -22,11 +22,9 @@ class TemplateManager:
                 return None
             except json.JSONDecodeError:
                 self._config = {
-                    "instruction": "Responde en un formato estructurado.",
-                    "conversation": [],
-                    "retrieved_context": [],
-                    "user_query": "",
-                    "fixed_parameter": "valor_fijo",
+                    "instrucciones": "Responde en un formato estructurado.",
+                    "contexto_recuperado": [],
+                    "consulta_del_usuario": "",
                 }
 
     def get_config(self):

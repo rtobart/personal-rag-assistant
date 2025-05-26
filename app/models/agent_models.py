@@ -5,6 +5,11 @@ class InputModel(BaseModel):
     embeddingAlgorithm: str
     vectorsTopK: int
     llmAgentDescription: str
+    modelProvider: str
+
+class InputBulkModel(BaseModel):
+    collection_name: str
+    embedding_algorithm: str
 
 class OutputModel(BaseModel):
     answer: str

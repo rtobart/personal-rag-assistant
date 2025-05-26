@@ -6,8 +6,7 @@ from app.config import config_instance
 from app.config.config import VARS
 # from app.exceptions.exceptions import EmbeddingException
 from app.logger.logger import LoggerInstance
-from app.services.sentence_transformer_service import SentenceTransformerService, get_sentence_transformer_service
-from app.services.vertex import get_embeddings
+from app.services.sentence_transformer_service import get_sentence_transformer_service
 
 
 class EmbeddingProcess:
@@ -45,7 +44,8 @@ class GcloudEmbeddingModel(EmbeddingProcess):
         """
         try:
             LoggerInstance.info("Init embeddings")
-            response = get_embeddings(text, self.model_name)
+            # response = get_embeddings(text, self.model_name)
+            response = "" #TODO: Remove this line when the get_embeddings function is implemented
             embeddings = [embedding.values for embedding in response][0]
             if not all(isinstance(value, float) for value in embeddings):
                 raise ValueError("Embedding values must be floats")
@@ -55,9 +55,9 @@ class GcloudEmbeddingModel(EmbeddingProcess):
             LoggerInstance.error(str(e))
 
 GCLOUD_EMBEDDING_MODEL = config_instance.ConfigInstance.get("GCLOUD_EMBEDDING_MODEL")
-GcloudEbedding = GcloudEmbeddingModel(GCLOUD_EMBEDDING_MODEL)
-SentenceTransformerEmbedding = SentenceTransformerEmbedding()
+gcloudEbedding = GcloudEmbeddingModel(GCLOUD_EMBEDDING_MODEL)
+sentenceTransformerEmbedding = SentenceTransformerEmbedding()
 use_embedding = {
-    "vertex": GcloudEbedding,
-    "sentence-transformer": SentenceTransformerEmbedding,
+    "vertex": gcloudEbedding,
+    "sentence-transformer": sentenceTransformerEmbedding,
 }
