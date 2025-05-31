@@ -3,7 +3,7 @@ from app.logger.logger import LoggerInstance
 from app.models.agent_models import InputModel
 from app.util.template import TemplateManager
 
-class ContexChatbotService:
+class PromptService:
     """
     Clase para manejar la creación de consultas y la gestión de plantillas."""
     def __init__(self):
@@ -25,6 +25,6 @@ class ContexChatbotService:
             LoggerInstance.error(f"Error creating query: {e}")
             return {"user_query": input.text}
 
-def get_contex_chatbot_service() -> ContexChatbotService:
+def get_contex_chatbot_service() -> PromptService:
     """Retorna una instancia de ContexChatbotService, cacheada para no ser recreada."""
-    return ContexChatbotService()
+    return PromptService()

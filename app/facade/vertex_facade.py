@@ -4,7 +4,6 @@ import re
 import vertexai
 import vertexai.preview.generative_models as generative_models
 from vertexai.generative_models import GenerativeModel
-from app.util.template import TemplateManager
 from app.config.config_instance import ConfigInstance
 from app.config.config import VARS
 from app.logger.logger import LoggerInstance
@@ -18,7 +17,6 @@ class VertexFacade:
         self.location = ConfigInstance.get(VARS.GCP_VERTEX_LOCATION)
         vertexai.init(project=self.project, location=self.location)
         self.model_name = ConfigInstance.get(VARS.GCP_VERTEX_LLM_MODEL)
-        self.template_manager = TemplateManager()
         self.generation_config = {
             "max_output_tokens": int(
                 ConfigInstance.get(VARS.GCP_VERTEX_MAX_OUT_TOKENS)
@@ -49,3 +47,11 @@ class VertexFacade:
         except Exception as e:
             LoggerInstance.error(str(e))
             raise
+def get_vertex_facade():
+    """
+    Factory para la creación de una instancia de VertexFacade.
+    
+    Retorna:
+        VertexFacade: Una instancia de la clase VertexFacade.
+    """
+    return VertexFacade()

@@ -1,23 +1,20 @@
-import requests
-import json
-import aiohttp
 from datetime import datetime
-from app.config.config_instance import ConfigInstance
-from app.config.config import VARS
+
 from app.exceptions.exceptions import NearestNeighborException, ProxyEmbeddingException
 from app.models.search import Search
-from app.services.vector_db_service_qdrant import VectorDBServiceInstanceQdrant
 from app.logger.logger import LoggerInstance
 from app.services.query_processing import process_query
+from app.services.vector_db_service import VectorDBService
 
 
-class PreHookService:
+class KnowledgeService:
 
-    def __init__(self):
+    def __init__(self, vector_db_service: VectorDBService):
         self.headers = {
             "accept": "application/json",
             "Content-Type": "application/json",
         }
+        self.vector_db_service = vector_db_service
 
     async def get_retrieved_embedding(self, query, embedding_algorithm):
         try:
@@ -42,7 +39,7 @@ class PreHookService:
                 filter_value=metadata["filter_value"],
             )
             LoggerInstance.debug(f"Metadata: {metadata}")
-            vectors = VectorDBServiceInstanceQdrant.search_text(search_object)
+            vectors = await self.vector_db_service.search_text(search_object)
         except Exception as e:
             LoggerInstance.error(f"Error inesperado: {str(e)}")
             raise NearestNeighborException()
@@ -91,5 +88,5 @@ class PreHookService:
         return context
 
 
-def get_pre_hook_service() -> PreHookService:
-    return PreHookService()
+def get_pre_hook_service(vector_db_service: VectorDBService) -> KnowledgeService:
+    return KnowledgeService(vector_db_service)

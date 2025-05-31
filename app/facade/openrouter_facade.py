@@ -28,3 +28,8 @@ class OpenRouterFacade:
             return response if response else "No response from OpenAI API"
         except Exception as e:
             raise RuntimeError(f"Error in OpenRouter API: {str(e)}")
+def get_open_router_facade():
+    """
+    Factory function to create an instance of OpenRouterFacade.
+    """
+    return OpenRouterFacade()

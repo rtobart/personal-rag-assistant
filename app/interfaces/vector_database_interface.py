@@ -1,7 +1,6 @@
 from abc import abstractmethod, ABC
-from app.models.collection import CollectionDto
-from app.models.field import Field
 from app.models.file import FileBatch
+from app.models.search import Search
 
 class VectorDatabaseInterface(ABC):
     """
@@ -21,47 +20,11 @@ class VectorDatabaseInterface(ABC):
         pass
 
     @abstractmethod
-    def prepare_data(self, files: FileBatch, dynamic_data: dict[str, list], **kwargs):
-        """
-            Prepare data to be inserted into db.
-        """
-        pass
-
-    # PUBLIC METHODS
-    @abstractmethod
     def test_connection(self):
         """
             Test if the database is connected.
         """
         return self.online()
-
-    @abstractmethod
-    def change_database(self, name):
-        """
-            Change using database to another one.
-        """
-        pass
-
-    @abstractmethod
-    def list_collections(self):
-        """
-            List all collections
-        """
-        pass
-
-    @abstractmethod
-    def create_field_schema(self, field: Field):
-        """
-            Create schema for a field.
-        """
-        pass
-
-    @abstractmethod
-    def create_collection_batch(self, collection: CollectionDto) -> CollectionDto:
-        """
-            Create collections.
-        """
-        pass
 
     @abstractmethod
     async def insert_data(self, collection_name: str, files: FileBatch):
@@ -71,15 +34,22 @@ class VectorDatabaseInterface(ABC):
         pass
 
     @abstractmethod
-    async def  check_if_collection_exists(self, collection_name: str):
+    async def  search_text(self, search: Search):
         """
-            Check if a collection exists.
+            search by text in collection.
         """
         pass
     
     @abstractmethod
-    async def delete_data_collection(self, collection: CollectionDto):
+    async def  search_text_filter(self, search: Search):
         """
-            Delete data from a collection.
+            search by text in collection.
+        """
+        pass
+    
+    @abstractmethod
+    async def  search_text_no_filter(self, search: Search):
+        """
+            search by text in collection.
         """
         pass

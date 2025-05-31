@@ -23,3 +23,9 @@ class OpenAIFacade:
             return response if response else "No response from OpenAI API"
         except Exception as e:
             raise RuntimeError(f"Error in OpenAI API: {str(e)}")
+
+def get_open_ai_facade():
+    """
+    Factory function to create an instance of OpenAIFacade.
+    """
+    return OpenAIFacade()

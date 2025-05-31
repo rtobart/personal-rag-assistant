@@ -30,4 +30,17 @@ class OllamaClient:
 
     async def close(self):
         await self.client.aclose()
+        
+def get_ollama_client(base_url: str = "http://localhost:11434", model: str = "llama2") -> OllamaClient:
+    """
+    Factory function to create an instance of OllamaClient.
+    
+    Args:
+        base_url (str): The base URL for the Ollama API.
+        model (str): The model to use for generation.
+    
+    Returns:
+        OllamaClient: An instance of the OllamaClient class.
+    """
+    return OllamaClient(base_url=base_url, model=model)
 
